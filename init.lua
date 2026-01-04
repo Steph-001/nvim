@@ -1,5 +1,4 @@
--- >>>>>>>>>>>>>>>>>>>> CONFIGURATION START <<<<<<<<<<<<<<<<<<<<<<<
-
+-- >>>>>>>>>>>>>>>>>>>> CONFIGURATION START <<<<<<<<<<<<<<<<<<<<<
 -- First, load your custom options (vim.o, vim.g settings)
 -- It's usually better to load options before plugins
 require("config.options")
@@ -53,13 +52,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
--- Setup Python LSP (pyright)
-require("lspconfig").pyright.setup({
-    filetypes = { "python" }, -- Only attach to Python files
-    -- Add other pyright settings here if needed
-    -- settings = { ... }
-})
-
 -- Markdown file template
 vim.api.nvim_create_autocmd("BufNewFile", {
   pattern = "*.md",
@@ -77,29 +69,14 @@ vim.api.nvim_create_autocmd("BufNewFile", {
       ""
     }
     vim.api.nvim_buf_set_lines(0, 0, 0, false, lines)
+    -- Move cursor to inside the brackets in tags: []
+    local tag_line = 3  -- zero-indexed in Lua? Actually vim.api is 0-based for lines
+    local col = 7       -- position after [
+    vim.api.nvim_win_set_cursor(0, {tag_line + 1, col})  -- {line, col}, 1-based line
+    -- Enter insert mode
+    vim.cmd("startinsert")
   end,
 })
-
--- Setup Lua LSP (lua_ls)
-require("lspconfig").lua_ls.setup({
-    settings = {
-        Lua = {
-            diagnostics = {
-                -- Make lua_ls aware of Neovim globals like 'vim'
-                globals = { "vim" },
-            },
-            workspace = {
-                -- Make lua_ls aware of Neovim runtime files for better completion
-                library = vim.api.nvim_get_runtime_file("", true),
-                checkThirdParty = false, -- Improves performance in large projects
-            },
-            telemetry = {
-                enable = false, -- Disable telemetry
-            },
-        },
-    },
-})
-
 
 -- Notes search with fzf-lua
 vim.keymap.set('n', '<leader>fn', function()
@@ -112,15 +89,9 @@ vim.keymap.set('n', '<leader>fn', function()
   })
 end, { desc = 'Search in all note folders' })
 
-
-
-
-
-
-
-
-
-
-
-
-
+-- Do not treat csv files as code
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = "*.csv",
+  command = "setlocal syntax=off"
+})
+vim.opt.clipboard = "unnamedplus"

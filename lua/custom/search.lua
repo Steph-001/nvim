@@ -86,6 +86,7 @@ function M.search_by_tags()
   local notes_dirs = {
     '/mnt/c/Users/steph/OneDrive - Région Île-de-France/nts',
     '~/notes',
+    '/mnt/c/Users/steph/OneDrive - Région Île-de-France/Charly/classes',
   }
 
   local files = find_markdown_files(notes_dirs)

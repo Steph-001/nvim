@@ -28,9 +28,9 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = { "williamboman/mason-lspconfig.nvim" },
 		config = function()
-			-- Start with just one or two servers to test
-			require("lspconfig").pyright.setup({})
-			require("lspconfig").lua_ls.setup({})
+			-- New Neovim 0.11+ API
+			vim.lsp.enable('pyright')
+			vim.lsp.enable('lua_ls')
 		end,
 	},
 }
